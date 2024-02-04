@@ -86,7 +86,7 @@ body {
 }
 
 .customButton {
-  background-color: #2d377a !important; /* Use !important to ensure the style is applied */
+  background-color: #000000 !important; /* Use !important to ensure the style is applied */
   color: white; /* Set text color to white */
 }
 

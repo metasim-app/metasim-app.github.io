@@ -20,6 +20,11 @@ import InstructionsCard from './InstructionsCard'; // Import the InstructionsCar
 
 
 function App() {
+
+  useEffect(() => {
+    document.title = "MetaSim"; // Set the page title
+  }, []); // The empty array means this effect runs once after the initial render
+
   const [data, setData] = useState({ data: [] });
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -205,7 +210,7 @@ function App() {
     setIsLoading(true);
     setHasData(false);
     try {
-      const response = await fetch(`http://35.238.72.200:9090/api/get_data/?search=${searchTerm}&radio=${selectedRadio}`);
+      const response = await fetch(`https://metadatas.net/api/get_data/?search=${searchTerm}&radio=${selectedRadio}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -253,7 +258,11 @@ function App() {
 
   return (
     <div className="App" style={{ minHeight: '100vh' }}>
-      <h1 style={{ color: '#2d377a' }}>RepoXplorer</h1>
+      <header style={{ backgroundColor: '#000000', color: 'white', padding: '5px', textAlign: 'center' }}>
+      		<h1 style={{ color: '#FFFFFF' }}>MetaSim: Quantifying the importance of metadata features in
+repository similarity
+	  	</h1>
+      </header>
       <Grid container >
         <Grid item xs={12} sm={6}>
           <InstructionsCard />
@@ -281,12 +290,12 @@ function App() {
             <FormControlLabel
               value="1"
               control={<Radio />}
-              label="Name+Desc"
+              label="Name,Description"
             />
             <FormControlLabel
               value="2"
               control={<Radio />}
-              label="Name+Desc+Readme+Topics"
+              label="Name,Description,Topics"
             />
           </RadioGroup>
         </Grid>
@@ -327,11 +336,16 @@ function App() {
           ) : null}
         </Grid>
       </Grid>
+      <footer style={{ backgroundColor: '#000000', color: '#FFFFFF', textAlign: 'center', padding: '5px', position: 'fixed', bottom: '0', width: '100%' }}>
+      <p>
+        &copy; {2024} MAVERICS @ UCRiverside.
+      </p>
+    </footer>
       {/* No Results Dialog */}
       <Dialog open={noResultsDialogOpen} onClose={handleCloseNoResultsDialog}>
         <DialogTitle>No Results Found</DialogTitle>
         <DialogContent>
-          <Typography variant="body1">No results were found for your search. Provide an active Repo.</Typography>
+          <Typography variant="body1">No results found. Either given repo is not found online, or Input format mismatch or GitHub API limit exceeded. If API limit, try again after 60 minutes.</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseNoResultsDialog} color="primary">

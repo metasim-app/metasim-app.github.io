@@ -8,7 +8,7 @@ function InstructionsCard() {
   };
 
   return (
-    <Card style={{textAlign: 'left', background: '#182478', color: 'white',  margin: '20px'}}>
+    <Card style={{textAlign: 'left', background: '#000000', color: 'white',  margin: '20px'}}>
       <CardContent>
         <Typography variant="h5" gutterBottom>
           Instructions
