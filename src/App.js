@@ -34,7 +34,9 @@ function App() {
   const [noResultsDialogOpen, setNoResultsDialogOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [resultsPerPage] = useState(10);
+  const [resultsPerPage] = useState(10);  
+  const [resultStatus, setResultStatus] = useState(0);
+  
 
   const BoldHeader = ({ children }) => {
       return (
@@ -206,6 +208,12 @@ function App() {
     setSearchTerm(e.target.value);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      handleSearchClick();
+    }
+  };
+
   const handleSearchClick = async () => {
     setIsLoading(true);
     setHasData(false);
@@ -215,17 +223,24 @@ function App() {
         throw new Error('Network response was not ok');
       }
       const jsonData = await response.json();
+      console.log(jsonData);
       setData(jsonData);
 
       // Generate rows with unique IDs
-      const rowsWithIds = generateRowsWithIds(jsonData.data);
+      const rowsWithIds = generateRowsWithIds(jsonData['data']);
       setSearchResults(rowsWithIds);
 
       setCurrentPage(1);
-      console.log(jsonData);
+      // console.log(jsonData);
 
-      if (jsonData.data.length === 0) {
+      if (jsonData['status_code'] === 404) {
         setNoResultsDialogOpen(true);
+        setResultStatus(1);
+      } else if (jsonData['status_code'] === 403 || jsonData['status_code'] === 429) {
+        setNoResultsDialogOpen(true);
+        setResultStatus(2);
+      } else {
+        setResultStatus(0);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -258,13 +273,13 @@ function App() {
 
   return (
     <div className="App" style={{ minHeight: '100vh' }}>
-      <header style={{ backgroundColor: '#000000', color: 'white', padding: '5px', textAlign: 'center' }}>
-      		<h1 style={{ color: '#FFFFFF' }}>MetaSim: Quantifying the importance of metadata features in
+      <header style={{ backgroundColor: '#003da5',  padding: '5px', textAlign: 'center' }}>
+      		<h1 style={{ color: '#ffb81c' }}>MetaSim: Quantifying the importance of metadata features in
 repository similarity
 	  	</h1>
       </header>
       <Grid container >
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={9}>
           <InstructionsCard />
         </Grid>
       </Grid>
@@ -276,7 +291,8 @@ repository similarity
             fullWidth
             value={searchTerm}
             onChange={handleSearchChange}
-            placeholder="username/repo_name"
+            onKeyDown={handleKeyPress}
+            placeholder="facebookresearch/llama"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
@@ -336,7 +352,7 @@ repository similarity
           ) : null}
         </Grid>
       </Grid>
-      <footer style={{ backgroundColor: '#000000', color: '#FFFFFF', textAlign: 'center', padding: '5px', position: 'fixed', bottom: '0', width: '100%' }}>
+      <footer style={{ backgroundColor: '#003da5', color: '#FFFFFF', textAlign: 'center', padding: '5px', position: 'fixed', bottom: '0', width: '100%' }}>
       <p>
         &copy; {2024} MAVERICS @ UCRiverside.
       </p>
@@ -345,7 +361,8 @@ repository similarity
       <Dialog open={noResultsDialogOpen} onClose={handleCloseNoResultsDialog}>
         <DialogTitle>No Results Found</DialogTitle>
         <DialogContent>
-          <Typography variant="body1">No results found. Either given repo is not found online, or Input format mismatch or GitHub API limit exceeded. If API limit, try again after 60 minutes.</Typography>
+          <Typography variant="body1">
+              {resultStatus===1 ? "No results found. Please provide an active repo, or follow Input format match." : "GitHub API limit exceeded. Please try again after 60 minutes."}</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseNoResultsDialog} color="primary">
