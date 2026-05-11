@@ -1,0 +1,52 @@
+@import '@fontsource-variable/fraunces/index.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+html, body, #root { height: 100%; }
+body { margin: 0; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+/* A thin decorative double-rule that recalls a journal masthead. */
+.rule--editorial {
+  border-top: 1px solid var(--rule);
+  position: relative;
+}
+.rule--editorial::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 3px;
+  border-top: 1px solid var(--rule);
+}
+
+/* Soft staggered fade-up on initial reveal. */
+.reveal { opacity: 0; transform: translateY(8px); animation: revealIn .55s cubic-bezier(.2,.7,.2,1) forwards; }
+.reveal--1 { animation-delay: .04s; }
+.reveal--2 { animation-delay: .12s; }
+.reveal--3 { animation-delay: .22s; }
+.reveal--4 { animation-delay: .32s; }
+@keyframes revealIn { to { opacity: 1; transform: none; } }
+
+/* Loading shimmer for skeletons */
+@keyframes shimmer {
+  0%   { background-position: -240px 0; }
+  100% { background-position: 240px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #EFE9DC 0px, #F5F0E3 40px, #EFE9DC 80px);
+  background-size: 240px 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 4px;
+}
+
+/* Small caps label, used for section eyebrows */
+.eyebrow {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 600;
+}
