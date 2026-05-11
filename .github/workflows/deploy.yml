@@ -2,7 +2,7 @@ name: Deploy MetaSim to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude-main]
   workflow_dispatch:
 
 permissions:
